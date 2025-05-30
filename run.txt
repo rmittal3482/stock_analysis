@@ -1,0 +1,5 @@
+pip install flask yfinance pandas scikit-learn bokeh xlsxwriter requests
+cd C:\Users\dell\OneDrive\Desktop\stock_market_app
+set FLASK_APP=app.py
+set FLASK_ENV=development
+python app.py

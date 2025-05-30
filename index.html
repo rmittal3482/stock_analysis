@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Stock Market Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    {{ bokeh_css|safe }}
+    <style>
+        body {
+            background-color: #f7f9fc;
+        }
+        .card {
+            border-radius: 1rem;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .footer {
+            font-size: 0.9rem;
+        }
+        #chart {
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">📈 Stock Predictor</a>
+    </div>
+</nav>
+
+<main class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card p-4 shadow-sm mb-4 bg-white">
+                <h4 class="mb-3 text-center">Predict Next Day Closing Price</h4>
+                <form method="POST" novalidate>
+                    <div class="mb-3">
+                        <label for="ticker" class="form-label">Stock Ticker</label>
+                        <input type="text" class="form-control" name="ticker" id="ticker" placeholder="e.g., AAPL, MSFT" value="{{ ticker }}" required />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="start" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" name="start" id="start" value="{{ start }}" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="end" class="form-label">End Date</label>
+                            <input type="date" class="form-control" name="end" id="end" value="{{ end }}" required />
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Predict</button>
+                    </div>
+                </form>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger text-center">{{ error }}</div>
+            {% endif %}
+
+            {% if prediction %}
+            <div class="card shadow-sm p-4 bg-white">
+                <h5 class="mb-3">📊 Result</h5>
+                <p class="fs-5">Predicted closing price for <strong>{{ ticker }}</strong>:
+                    <span class="text-success fw-bold">${{ prediction|round(2) }}</span>
+                </p>
+                {% if show_downloads %}
+                <div class="mb-3">
+                    <a href="{{ url_for('download_csv') }}" class="btn btn-outline-primary me-2">Download CSV</a>
+                    <a href="{{ url_for('download_xlsx') }}" class="btn btn-outline-success">Download Excel</a>
+                </div>
+                {% endif %}
+                <div id="chart">
+                    {{ bokeh_js|safe }}
+                    {{ bokeh_script|safe }}
+                    {{ bokeh_div|safe }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if news %}
+            <div class="card shadow-sm p-4 mt-4 bg-white">
+                <h5 class="mb-3">📰 Latest News for {{ ticker }}</h5>
+                <ul class="list-group list-group-flush">
+                    {% for article in news %}
+                    <li class="list-group-item">
+                        <a href="{{ article.url }}" target="_blank" class="fw-bold">{{ article.title }}</a><br>
+                        <small class="text-muted">{{ article.publishedAt[:10] }} - {{ article.source.name }}</small>
+                        {% if article.description %}
+                        <p class="mb-1 mt-1">{{ article.description }}</p>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+<footer class="footer text-center text-muted mt-5 mb-3">
+    <p>&copy; 2025 Stock Predictor. Built with ❤️ using Flask & Bokeh.</p>
+</footer>
+
+</body>
+</html>
