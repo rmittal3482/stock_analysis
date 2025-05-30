@@ -1,7 +1,7 @@
 # stock_analysis
 This project presents a web-based stock analysis and prediction application using Python, Flask, and machine learning. Users can enter a stock ticker and date range to visualize stock trends, calculate technical indicators (Moving Averages, RSI, MACD), and predict the next day's closing price using linear regression. Additionally, the application integrates real-time financial news related to the queried stock, enhancing context-aware analysis.
 
-Technologies Used
+#Technologies Used
 
 Frontend: HTML, Bootstrap, Bokeh (for interactive plots)
 
@@ -13,7 +13,7 @@ Visualization: Bokeh
 
 Machine Learning: Linear Regression (scikit-learn)
 
-Key Features
+#Key Features
 
 Stock Price Visualization
 
